@@ -25,6 +25,114 @@ namespace DOTNET.Common.Reflections
         => type.GetFields(BindingFlags.Public | BindingFlags.Static |
                   BindingFlags.FlattenHierarchy)
                     .Where(fi => fi.IsLiteral && !fi.IsInitOnly).ToList();
-        
+
+
+        public static TResultClass CopyProperties<TResultClass>(CopyObjectArguments<TResultClass> arg) where TResultClass : class
+        {
+            #region All the properties 
+
+            //All the properties of the source class
+            PropertyInfo[] propSource = arg.Source.GetType().GetProperties();
+            //All the properties of the result class
+            PropertyInfo[] propResult = typeof(TResultClass).GetProperties();
+
+            #endregion
+
+            #region Instance of result class
+
+            TResultClass? t = null;
+            //You can copy the values to a class that has already been created, or create the class and then copy the values.
+            if (arg.TResult == null)
+                t = Activator.CreateInstance(typeof(TResultClass)) as TResultClass;
+            else
+                t = arg.TResult;
+
+
+            #endregion
+
+            #region Create map
+
+            //string key => propSource[i].Name
+            //string Value => propResult[i].Name
+            Dictionary<string, string>? Map = new Dictionary<string, string>();
+
+            if (arg.Map != null)
+            {
+                Map = arg.Map;
+            }
+            else
+            {
+                foreach (PropertyInfo piSource in propSource)
+                {
+                    IEnumerable<PropertyInfo> queryResult = propResult.Where(x => x.Name.Equals(piSource.Name, arg.CaseSensitive));
+                    if (queryResult.Any())
+                    {
+                        PropertyInfo? ptarget = queryResult.FirstOrDefault();
+                        if (ptarget != null)
+                            Map.Add(piSource.Name, ptarget.Name);
+                    }
+                }
+            }
+
+
+            #endregion
+
+            #region Copy Data
+
+            foreach (KeyValuePair<string, string> item in Map)
+            {
+                //Find a variable with the same name in the source class
+                PropertyInfo? PSource = propSource.FirstOrDefault(x => x.Name.Equals(item.Key));
+                //Find a variable with the same name in the result class
+                PropertyInfo? PResult = propResult.FirstOrDefault(x => x.Name.Equals(item.Value));
+
+                //Whether the result variable has a value or not
+                object? PResultValue = PResult.GetValue(t);
+                //If the user does not want the variables that have values to change, ignore them
+                if (arg.TResult != null && arg.IgnoreVariablesAreNotNull && PResultValue != null)
+                {
+                    continue;
+                }
+                else
+                {
+                    //copy data
+                    object? copy = PSource.GetValue(arg.Source);
+                    PResult.SetValue(t, copy);
+                }
+
+            }
+
+            #endregion
+
+            return t;
+        }
+    }
+
+    public class CopyObjectArguments<TResultClass> where TResultClass : class
+    {
+        public required object Source { get; set; }
+
+        /// <summary>
+        /// If the names of the properties of the origin and destination classes are different from each other,
+        /// it can be specified in this section
+        /// The key is equal to the source property name and the value is equal to the destination property name of the destination class
+        /// Map.Key     => Source
+        /// Map.Value   => Result
+        /// </summary>
+        public Dictionary<string, string>? Map { get; set; }
+
+        public StringComparison CaseSensitive { get; set; }
+
+        /// <summary>
+        /// Ignore variables that are not null (It depends on the TResult variable)
+        /// This function is available if the TResult variable has a value
+        /// </summary>
+        public bool IgnoreVariablesAreNotNull { get; set; }
+
+        /// <summary>
+        /// This variable can be null
+        /// </summary>
+        public TResultClass? TResult { get; set; }
+
     }
 }
