@@ -26,7 +26,6 @@ namespace DOTNET.Common.Reflections
                   BindingFlags.FlattenHierarchy)
                     .Where(fi => fi.IsLiteral && !fi.IsInitOnly).ToList();
 
-
         public static TResultClass CopyProperties<TResultClass>(CopyObjectArguments<TResultClass> arg) where TResultClass : class
         {
             #region All the properties 
@@ -35,6 +34,35 @@ namespace DOTNET.Common.Reflections
             PropertyInfo[] propSource = arg.Source.GetType().GetProperties();
             //All the properties of the result class
             PropertyInfo[] propResult = typeof(TResultClass).GetProperties();
+
+            if(arg.Ignore != null)
+            {
+                //It was written in this section for more speed
+                #region Ignore selected items (From source - Key)
+                //Items that should not be ignored
+                List<PropertyInfo> _temppropSource = new List<PropertyInfo>(); 
+                foreach (var item in propSource)
+                {
+                    IEnumerable<string> q = arg.Ignore.Where(x => x.Equals(item.Name));
+                    if (!q.Any())
+                        _temppropSource.Add(item);
+                }
+                propSource = _temppropSource.ToArray();
+                #endregion
+
+                #region Ignore selected items (From result - value)
+
+                //Items that should not be ignored
+                List<PropertyInfo> _temppropResult = new List<PropertyInfo>();
+                foreach (var item in propResult)
+                {
+                    IEnumerable<string> q = arg.Ignore.Where(x => x.Equals(item.Name));
+                    if (!q.Any())
+                        _temppropResult.Add(item);
+                }
+                propResult = _temppropResult.ToArray();
+                #endregion
+            }
 
             #endregion
 
@@ -120,6 +148,8 @@ namespace DOTNET.Common.Reflections
         /// Map.Value   => Result
         /// </summary>
         public Dictionary<string, string>? Map { get; set; }
+
+        public IList<string>? Ignore { get; set; }
 
         public StringComparison CaseSensitive { get; set; }
 
