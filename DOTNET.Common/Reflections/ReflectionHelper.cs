@@ -116,7 +116,7 @@ namespace DOTNET.Common.Reflections
 
                 //Whether the result variable has a value or not
                 object? PResultValue = PResult.GetValue(t);
-                //If the user does not want the variables that have values to change, ignore them
+                //If the user does not want the variables that have values to change (In TResultClass object), ignore them
                 if (arg.TResult != null && arg.IgnoreVariablesAreNotNull && PResultValue != null)
                 {
                     continue;
@@ -154,7 +154,7 @@ namespace DOTNET.Common.Reflections
         public StringComparison CaseSensitive { get; set; }
 
         /// <summary>
-        /// Ignore variables that are not null (It depends on the TResult variable)
+        /// Ignore variables(in TResultClass object) that are not null (It depends on the TResult variable)
         /// This function is available if the TResult variable has a value
         /// </summary>
         public bool IgnoreVariablesAreNotNull { get; set; }
