@@ -11,6 +11,24 @@ namespace DOTNET.Common.Reflections
     public class ReflectionHelper
     {
 
+        public static object? GetValue(object obj, string ProperrtyName)
+        {
+            return obj.GetType().GetProperties().Where(x => x.Name.Equals(ProperrtyName)).FirstOrDefault()?.GetValue(obj);
+        }
+
+        public static bool IsContains(object? obj, string ProperrtyName, StringComparison stringComparison)
+        {
+            try
+            {
+                PropertyInfo[] properties = obj.GetType().GetType().GetProperties();
+                return properties.Any(x => x.Name.Equals(ProperrtyName, StringComparison.Ordinal));
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         /// <summary>
         /// https://stackoverflow.com/questions/10261824/how-can-i-get-all-constants-of-a-type-by-reflection
         /// How can I get all constants of a type by reflection?
@@ -35,12 +53,12 @@ namespace DOTNET.Common.Reflections
             //All the properties of the result class
             PropertyInfo[] propResult = typeof(TResultClass).GetProperties();
 
-            if(arg.Ignore != null)
+            if (arg.Ignore != null)
             {
                 //It was written in this section for more speed
                 #region Ignore selected items (From source - Key)
                 //Items that should not be ignored
-                List<PropertyInfo> _temppropSource = new List<PropertyInfo>(); 
+                List<PropertyInfo> _temppropSource = new List<PropertyInfo>();
                 foreach (var item in propSource)
                 {
                     IEnumerable<string> q = arg.Ignore.Where(x => x.Equals(item.Name));
@@ -163,6 +181,16 @@ namespace DOTNET.Common.Reflections
         /// This variable can be null
         /// </summary>
         public TResultClass? TResult { get; set; }
+
+        public CopyObjectArguments()
+        {
+
+        }
+
+        public CopyObjectArguments(object source)
+        {
+            this.Source = source;
+        }
 
     }
 }
