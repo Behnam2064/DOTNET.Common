@@ -87,6 +87,7 @@ namespace DOTNET.Common.Networks
     public class SocketReceiverArguments
     {
         public required int BufferSize { get; set; }
+
         public required CancellationToken CancellationToken;
         public required WebSocket WebSocket { get; set; }
         public required WebSocketMessageType WebSocketMessageType { get; set; }
