@@ -109,17 +109,17 @@ namespace DOTNET.Common.Reflections
             else
             {
 
-                Map = CreateMap(arg.Source.GetType(), typeof(TResultClass), arg.CaseSensitive);
-               /* foreach (PropertyInfo piSource in propSource)
-                {
-                    IEnumerable<PropertyInfo> queryResult = propResult.Where(x => x.Name.Equals(piSource.Name, arg.CaseSensitive));
-                    if (queryResult.Any())
-                    {
-                        PropertyInfo? ptarget = queryResult.FirstOrDefault();
-                        if (ptarget != null)
-                            Map.Add(piSource.Name, ptarget.Name);
-                    }
-                }*/
+                Map = CreateMap(propSource, propResult, arg.CaseSensitive);
+                /* foreach (PropertyInfo piSource in propSource)
+                 {
+                     IEnumerable<PropertyInfo> queryResult = propResult.Where(x => x.Name.Equals(piSource.Name, arg.CaseSensitive));
+                     if (queryResult.Any())
+                     {
+                         PropertyInfo? ptarget = queryResult.FirstOrDefault();
+                         if (ptarget != null)
+                             Map.Add(piSource.Name, ptarget.Name);
+                     }
+                 }*/
             }
 
 
@@ -155,14 +155,34 @@ namespace DOTNET.Common.Reflections
             return t;
         }
 
-        public static Dictionary<string, string> CreateMap(Type typeSource,Type typeResult,StringComparison CaseSensitive)
+        public static Dictionary<string, string> CreateMap(Type typeSource, Type typeResult, StringComparison CaseSensitive)
         {
-            Dictionary<string, string> Map = new Dictionary<string, string>();
 
-           //All the properties of the source class
-           PropertyInfo[] propSource = typeSource.GetProperties();
+
+            //All the properties of the source class
+            PropertyInfo[] propSource = typeSource.GetProperties();
             //All the properties of the result class
             PropertyInfo[] propResult = typeResult.GetProperties();
+            /*
+                        foreach (PropertyInfo piSource in propSource)
+                        {
+                            IEnumerable<PropertyInfo> queryResult = propResult.Where(x => x.Name.Equals(piSource.Name, CaseSensitive));
+                            if (queryResult.Any())
+                            {
+                                PropertyInfo? ptarget = queryResult.FirstOrDefault();
+                                if (ptarget != null)
+                                    Map.Add(piSource.Name, ptarget.Name);
+                            }
+                        }
+
+                        return Map; */
+
+            return CreateMap(propSource, propResult, CaseSensitive);
+        }
+
+        public static Dictionary<string, string> CreateMap(PropertyInfo[] propSource, PropertyInfo[] propResult, StringComparison CaseSensitive)
+        {
+            Dictionary<string, string> Map = new Dictionary<string, string>();
 
             foreach (PropertyInfo piSource in propSource)
             {
@@ -175,7 +195,7 @@ namespace DOTNET.Common.Reflections
                 }
             }
 
-            return Map; 
+            return Map;
         }
 
 
