@@ -76,6 +76,7 @@ namespace DOTNET.Common.Networks
         => await Task.Run(async () =>
         {
             string txt = await GetAsStringAsync(arguments);
+            if(string.IsNullOrEmpty(txt) || string.IsNullOrWhiteSpace(txt)) return null;    
             txt = arguments.ISecurityText.DecryptText(txt);
             return JsonSerializer.Deserialize<TEntity>(txt);
 
