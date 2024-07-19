@@ -25,7 +25,7 @@ namespace DOTNET.Common.Extensions.DateTimes
 
         public static DateTime TrimToMinutes(this DateTime dateTime)
         {
-            return dateTime.TrimMilliseconds().TrimMinutes();
+            return dateTime.TrimMilliseconds().TrimSeconds().TrimMinutes();
         }
 
         public static bool IsToday(this DateTime dateTime)
