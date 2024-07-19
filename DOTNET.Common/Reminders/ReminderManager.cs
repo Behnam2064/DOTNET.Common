@@ -109,13 +109,14 @@ namespace DOTNET.Common.Reminders
 
                 var args = new OnRefreshRemindersArgument();
 
+                var resultReminders = OnRefreshReminders.Invoke(args);
                 //The operation has been discontinued
                 if (args.IsCancel)
                     return;
 
                 //No need to update the list
                 if (!args.PreventUpdatesReminders)
-                    Reminders = OnRefreshReminders.Invoke(args);
+                    Reminders = resultReminders;
 
                 using (BackgroundWorker bw = new BackgroundWorker())
                 {
@@ -150,6 +151,7 @@ namespace DOTNET.Common.Reminders
                                 if (item.DateTime.TrimToMinutes() >= DateTime.Now.TrimToMinutes())
                                 {
                                     OnReminder.Invoke(this, item);
+                                    item.LastNotified = DateTime.Now;
                                 }
 
                             }
