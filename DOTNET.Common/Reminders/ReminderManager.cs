@@ -44,11 +44,15 @@ namespace DOTNET.Common.Reminders
 
         #endregion
 
-        public ReminderManager()
+        public ReminderManager(int intervalSecond)
         {
             Reminders = new List<Reminder>();
-            Interval = TimeSpan.FromSeconds(30).TotalMicroseconds;
+            Interval = TimeSpan.FromSeconds(intervalSecond).TotalMilliseconds;
             _isRunning = false;
+
+        }
+        public ReminderManager() : this(30)
+        {
 
         }
 
@@ -70,6 +74,7 @@ namespace DOTNET.Common.Reminders
                 this.Timer.Enabled = true;
                 _isRunning = true;
                 this.Timer.Elapsed += TimerElapsed;
+                this.Timer.Start();
             }
 
         }
