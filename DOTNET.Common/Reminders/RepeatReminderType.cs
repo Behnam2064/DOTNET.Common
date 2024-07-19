@@ -10,6 +10,6 @@
         Monthly,
         MonthlySelective,
         Yearly,
-        YearlySelective,
+        //YearlySelective,
     }
 }
