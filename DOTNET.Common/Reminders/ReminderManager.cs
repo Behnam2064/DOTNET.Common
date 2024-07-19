@@ -66,10 +66,16 @@ namespace DOTNET.Common.Reminders
                 if (args.Reminders != null)
                     this.Reminders = args.Reminders;
 
-                if (args.StartAtConstructor)
-                    Start();
+
+                if (args.OnReminder != null)
+                    this.OnReminder += args.OnReminder;
 
                 this.IsConstReminderSource = args.IsConstReminderSource;
+
+
+
+                if (args.StartAtConstructor)
+                    Start();
             }
             else
             {

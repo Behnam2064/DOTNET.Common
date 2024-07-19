@@ -23,5 +23,7 @@ namespace DOTNET.Common.Reminders
         /// Do not invock OnRefreshReminders every time
         /// </summary>
         public bool IsConstReminderSource { get; set; }
+
+        public EventHandler<Reminder>? OnReminder { get; set; }
     }
 }
