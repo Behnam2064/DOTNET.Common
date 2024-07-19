@@ -12,8 +12,9 @@ namespace DOTNET.Common.Reminders
         public string? Title { get; set; }
         public string? Description { get; set; }
         //public long ReminderSecond { get; set; }
-        public DateTime DateTime { get; set; }
+        public DateTime StartDateTime { get; set; }
         public DateTime? LastNotified { get; set; }
+        //public DateTime? NextNotify { get; internal set; }
         public RepeatReminder? RepeatReminder { get; set; }
 
     }

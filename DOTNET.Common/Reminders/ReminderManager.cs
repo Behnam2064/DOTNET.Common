@@ -134,42 +134,63 @@ namespace DOTNET.Common.Reminders
 
                             //  2/2/2024 > 1/1/2024
                             // The time to remember has not yet come
-                            if (item.DateTime > DateTime.Now)
+                            if (item.StartDateTime > DateTime.Now)
                                 continue;
 
                             //  1/1/2024 < 2/2/2024
                             //Reminder time is over  
                             if (item.RepeatReminder != null && item.RepeatReminder.EndDateTime != null && item.RepeatReminder.EndDateTime < DateTime.Now)
+                            {
+                                //item.NextNotify = null;
                                 continue;
+                            }
 
 
                             #endregion
 
                             if (item.RepeatReminder == null)
                             {
-
-                                if (item.DateTime.TrimToMinutes() >= DateTime.Now.TrimToMinutes())
+                                if (item.LastNotified == null)
                                 {
-                                    OnReminder.Invoke(this, item);
-                                    item.LastNotified = DateTime.Now;
+                                    if (item.StartDateTime.TrimToMinutes() <= DateTime.Now.TrimToMinutes())
+                                    {
+                                        OnReminder.Invoke(this, item);
+                                        item.LastNotified = DateTime.Now;
+                                    }
+                                }
+                                else if (!item.LastNotified.Value.IsToday())
+                                {
+                                    if (item.StartDateTime.TrimToMinutes() <= DateTime.Now.TrimToMinutes())
+                                    {
+                                        OnReminder.Invoke(this, item);
+                                        item.LastNotified = DateTime.Now;
+                                    }
                                 }
 
                             }
                             else
                             {
-                                if (item.LastNotified == null &&
-                                item.RepeatReminder.RepeatType != RepeatReminderType.WeeklySelective &&
-                                item.RepeatReminder.RepeatType != RepeatReminderType.MonthlySelective)
+
+                                DateTime LastNotified = DateTime.MinValue;
+                                DateTime LDateTime = DateTime.MinValue;
+                                if (item.LastNotified == null)
                                 {
-                                    OnReminder.Invoke(this, item);
-                                    item.LastNotified = DateTime.Now;
-                                    continue;
+                                    LastNotified = DateTime.Now; //item.DateTime;
+                                    LDateTime = item.StartDateTime;
+
+                                }
+                                else
+                                {
+                                    LastNotified = DateTime.Now;
+                                    LDateTime = (DateTime)item.LastNotified;
                                 }
 
+                                /*DateTime LastNotified = item.LastNotified ?? DateTime.Now; //item.DateTime;
+                                DateTime LDateTime = item.LastNotified ?? item.StartDateTime;*/
                                 switch (item.RepeatReminder.RepeatType)
                                 {
                                     case RepeatReminderType.Minutely:
-                                        if (item.DateTime.GetMinutes((DateTime)item.LastNotified) >= item.RepeatReminder.AmountTime)
+                                        if (LDateTime.GetMinutes(LastNotified) >= item.RepeatReminder.AmountTime)
                                         {
                                             OnReminder.Invoke(this, item);
                                             item.LastNotified = DateTime.Now;
@@ -178,7 +199,7 @@ namespace DOTNET.Common.Reminders
                                         break;
                                     case RepeatReminderType.Hourly:
 
-                                        if (item.DateTime.GetHours((DateTime)item.LastNotified) >= item.RepeatReminder.AmountTime)
+                                        if (LDateTime.GetHours(LastNotified) >= item.RepeatReminder.AmountTime)
                                         {
                                             OnReminder.Invoke(this, item);
                                             item.LastNotified = DateTime.Now;
@@ -187,7 +208,7 @@ namespace DOTNET.Common.Reminders
                                         break;
                                     case RepeatReminderType.Daliy:
 
-                                        if (item.DateTime.GetDays((DateTime)item.LastNotified) >= item.RepeatReminder.AmountTime)
+                                        if (LDateTime.GetDays(LastNotified) >= item.RepeatReminder.AmountTime)
                                         {
                                             OnReminder.Invoke(this, item);
                                             item.LastNotified = DateTime.Now;
@@ -196,7 +217,7 @@ namespace DOTNET.Common.Reminders
                                         break;
                                     case RepeatReminderType.Weekly:
 
-                                        double AmountWeek = item.DateTime.GetDays((DateTime)item.LastNotified) / 7;
+                                        double AmountWeek = LDateTime.GetDays(LastNotified) / 7;
                                         if (AmountWeek >= item.RepeatReminder.AmountTime)
                                         {
                                             OnReminder.Invoke(this, item);
@@ -210,8 +231,9 @@ namespace DOTNET.Common.Reminders
                                         {
                                             // Maybe LastNotified will be null
                                             if (item.LastNotified == null || !item.LastNotified.Value.IsToday())
+                                            //if (!LastNotified.IsToday())
                                             {
-                                                DateTime dateTimeConvertedToNow = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, item.DateTime.Hour, item.DateTime.Minute, item.DateTime.Second);
+                                                DateTime dateTimeConvertedToNow = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, LDateTime.Hour, item.StartDateTime.Minute, item.StartDateTime.Second);
                                                 if (dateTimeConvertedToNow >= DateTime.Now)
                                                 {
                                                     OnReminder.Invoke(this, item);
@@ -222,7 +244,7 @@ namespace DOTNET.Common.Reminders
 
                                         break;
                                     case RepeatReminderType.Monthly:
-                                        double AmountMonth = item.DateTime.GetDays((DateTime)item.LastNotified) / 30;
+                                        double AmountMonth = LDateTime.GetDays(LastNotified) / 30;
                                         if (AmountMonth >= item.RepeatReminder.AmountTime)
                                         {
                                             OnReminder.Invoke(this, item);
@@ -243,7 +265,7 @@ namespace DOTNET.Common.Reminders
                                                 {
                                                     if (item.RepeatReminder.Days[i] == DateTime.Now.Day)
                                                     {
-                                                        DateTime dateTimeConvertedToNow = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, item.DateTime.Hour, item.DateTime.Minute, item.DateTime.Second);
+                                                        DateTime dateTimeConvertedToNow = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, item.StartDateTime.Hour, item.StartDateTime.Minute, item.StartDateTime.Second);
                                                         if (dateTimeConvertedToNow >= DateTime.Now)
                                                         {
                                                             OnReminder.Invoke(this, item);
@@ -256,7 +278,7 @@ namespace DOTNET.Common.Reminders
                                         break;
                                     case RepeatReminderType.Yearly:
 
-                                        double AmountYear = item.DateTime.GetDays((DateTime)item.LastNotified) / 365;
+                                        double AmountYear = LDateTime.GetDays(LastNotified) / 365;
                                         if (AmountYear >= item.RepeatReminder.AmountTime)
                                         {
                                             OnReminder.Invoke(this, item);
