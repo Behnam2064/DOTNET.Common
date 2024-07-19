@@ -30,6 +30,11 @@ namespace DOTNET.Common.Reminders
         /// </summary>
         public IList<Reminder> Reminders { get; private set; }
 
+        /// <summary>
+        /// Do not invock OnRefreshReminders func every time
+        /// </summary>
+        public bool IsConstReminderSource { get; set; }
+
         #endregion
 
         #region Func
@@ -44,14 +49,42 @@ namespace DOTNET.Common.Reminders
 
         #endregion
 
-        public ReminderManager(int intervalSecond)
+        public ReminderManager(ReminderManagerArgs args)
         {
             Reminders = new List<Reminder>();
-            Interval = TimeSpan.FromSeconds(intervalSecond).TotalMilliseconds;
-            _isRunning = false;
+
+            if (args != null)
+            {
+                if (args.OnRefreshReminders != null)
+                    this.OnRefreshReminders = args.OnRefreshReminders;
+
+                if (args.Interval != 0)
+                    Interval = TimeSpan.FromSeconds(args.Interval).TotalMilliseconds;
+                else
+                    Interval = TimeSpan.FromSeconds(30).TotalMilliseconds;
+
+                if (args.Reminders != null)
+                    this.Reminders = args.Reminders;
+
+                if (args.StartAtConstructor)
+                    Start();
+
+                this.IsConstReminderSource = args.IsConstReminderSource;
+            }
+            else
+            {
+                Interval = TimeSpan.FromSeconds(30).TotalMilliseconds;
+
+            }
 
         }
-        public ReminderManager() : this(30)
+
+        public ReminderManager(int intervalSecond) : this(new ReminderManagerArgs() { Interval = intervalSecond })
+        {
+
+
+        }
+        public ReminderManager() : this(new ReminderManagerArgs() { Interval = 30 })
         {
 
         }
@@ -107,16 +140,19 @@ namespace DOTNET.Common.Reminders
             {
                 IsInTimerElapsed = true;
 
-                var args = new OnRefreshRemindersArgument();
+                if (!IsConstReminderSource)
+                {
+                    OnRefreshRemindersArgument args = new OnRefreshRemindersArgument();
 
-                var resultReminders = OnRefreshReminders.Invoke(args);
-                //The operation has been discontinued
-                if (args.IsCancel)
-                    return;
+                    IList<Reminder> resultReminders = OnRefreshReminders.Invoke(args);
+                    //The operation has been discontinued
+                    if (args.IsCancel)
+                        return;
 
-                //No need to update the list
-                if (!args.PreventUpdatesReminders)
-                    Reminders = resultReminders;
+                    //No need to update the list
+                    if (!args.PreventUpdatesReminders)
+                        Reminders = resultReminders;
+                }
 
                 using (BackgroundWorker bw = new BackgroundWorker())
                 {
@@ -234,12 +270,12 @@ namespace DOTNET.Common.Reminders
                                             // Maybe LastNotified will be null
                                             //if (item.LastNotified == null || !item.LastNotified.Value.IsToday())
                                             //{
-                                                DateTime dateTimeConvertedToNow = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, item.StartDateTime.Hour, item.StartDateTime.Minute, item.StartDateTime.Second);
-                                                if (dateTimeConvertedToNow.TrimToSeconds() == DateTime.Now.TrimToSeconds() || dateTimeConvertedToNow.GetSeconds(DateTime.Now) <= TimeSpan.FromMilliseconds(this.Interval).TotalSeconds)
-                                                {
-                                                    OnReminder.Invoke(this, item);
-                                                    item.LastNotified = DateTime.Now;
-                                                }
+                                            DateTime dateTimeConvertedToNow = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, item.StartDateTime.Hour, item.StartDateTime.Minute, item.StartDateTime.Second);
+                                            if (dateTimeConvertedToNow.TrimToSeconds() == DateTime.Now.TrimToSeconds() || dateTimeConvertedToNow.GetSeconds(DateTime.Now) <= TimeSpan.FromMilliseconds(this.Interval).TotalSeconds)
+                                            {
+                                                OnReminder.Invoke(this, item);
+                                                item.LastNotified = DateTime.Now;
+                                            }
                                             //}
                                         }
 
@@ -255,7 +291,7 @@ namespace DOTNET.Common.Reminders
                                         break;
 
                                     case RepeatReminderType.MonthlySelective:
-                                    //case RepeatReminderType.YearlySelective:
+                                        //case RepeatReminderType.YearlySelective:
                                         int CurrentMonth = DateTime.Now.Month;
                                         // Maybe LastNotified will be null
                                         if (/*item.LastNotified == null || !item.LastNotified.Value.IsToday() && */item.RepeatReminder.Months.Any(x => x == CurrentMonth))
