@@ -217,7 +217,8 @@ namespace DOTNET.Common.Reminders
                                         break;
                                     case RepeatReminderType.Weekly:
 
-                                        double AmountWeek = LDateTime.GetDays(LastNotified) / 7;
+                                        var days = LDateTime.GetDays(LastNotified);
+                                        double AmountWeek = days / 7;
                                         if (AmountWeek >= item.RepeatReminder.AmountTime)
                                         {
                                             OnReminder.Invoke(this, item);
@@ -233,8 +234,8 @@ namespace DOTNET.Common.Reminders
                                             if (item.LastNotified == null || !item.LastNotified.Value.IsToday())
                                             //if (!LastNotified.IsToday())
                                             {
-                                                DateTime dateTimeConvertedToNow = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, LDateTime.Hour, item.StartDateTime.Minute, item.StartDateTime.Second);
-                                                if (dateTimeConvertedToNow >= DateTime.Now)
+                                                DateTime dateTimeConvertedToNow = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, item.StartDateTime.Hour, item.StartDateTime.Minute, item.StartDateTime.Second);
+                                                if (dateTimeConvertedToNow <= DateTime.Now)
                                                 {
                                                     OnReminder.Invoke(this, item);
                                                     item.LastNotified = DateTime.Now;
@@ -266,7 +267,7 @@ namespace DOTNET.Common.Reminders
                                                     if (item.RepeatReminder.Days[i] == DateTime.Now.Day)
                                                     {
                                                         DateTime dateTimeConvertedToNow = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, item.StartDateTime.Hour, item.StartDateTime.Minute, item.StartDateTime.Second);
-                                                        if (dateTimeConvertedToNow >= DateTime.Now)
+                                                        if (dateTimeConvertedToNow <= DateTime.Now)
                                                         {
                                                             OnReminder.Invoke(this, item);
                                                             item.LastNotified = DateTime.Now;
