@@ -39,7 +39,7 @@ namespace DOTNET.Common.Reminders
 
         #region Func
 
-        public required Func<OnRefreshRemindersArgument, IList<Reminder>> OnRefreshReminders { get; set; }
+        public Func<OnRefreshRemindersArgument, IList<Reminder>> OnRefreshReminders { get; set; }
 
         #endregion
 
