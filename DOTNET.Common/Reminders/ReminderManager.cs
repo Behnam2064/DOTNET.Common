@@ -98,7 +98,7 @@ namespace DOTNET.Common.Reminders
                 if (this.Timer != null)
                     throw new InvalidOperationException("The Timer is not null (The services was already started.)");
 
-                if (OnRefreshReminders == null)
+                if ((IsConstReminderSource && Reminders == null) || (!IsConstReminderSource && OnRefreshReminders == null))
                     throw new ArgumentNullException($"The '{nameof(OnRefreshReminders)}' property is null");
 
                 this.Timer = new System.Timers.Timer();
