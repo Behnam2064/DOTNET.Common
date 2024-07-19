@@ -9,7 +9,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{F1D305D1-252
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{62C71B6D-4F4D-41EA-9630-6B5771CD734E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.DOTNET.Common", "Test.DOTNET.Common\Test.DOTNET.Common.csproj", "{A5C1E701-2D92-4FDE-ACC8-45EF5E8C15A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.DOTNET.Common", "Test.DOTNET.Common\Test.DOTNET.Common.csproj", "{A5C1E701-2D92-4FDE-ACC8-45EF5E8C15A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.DotnetCommonReminder", "Test.DotnetCommonReminder\Test.DotnetCommonReminder.csproj", "{5D7D1F8B-CE45-4CCC-9D5E-760833FE09B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +27,10 @@ Global
 		{A5C1E701-2D92-4FDE-ACC8-45EF5E8C15A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5C1E701-2D92-4FDE-ACC8-45EF5E8C15A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5C1E701-2D92-4FDE-ACC8-45EF5E8C15A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D7D1F8B-CE45-4CCC-9D5E-760833FE09B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D7D1F8B-CE45-4CCC-9D5E-760833FE09B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D7D1F8B-CE45-4CCC-9D5E-760833FE09B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D7D1F8B-CE45-4CCC-9D5E-760833FE09B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,6 +38,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0A1138ED-19AF-4CD3-AB08-D5D56332D58C} = {F1D305D1-252C-455F-A523-D558F49C2B76}
 		{A5C1E701-2D92-4FDE-ACC8-45EF5E8C15A3} = {62C71B6D-4F4D-41EA-9630-6B5771CD734E}
+		{5D7D1F8B-CE45-4CCC-9D5E-760833FE09B4} = {62C71B6D-4F4D-41EA-9630-6B5771CD734E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EF52D5FB-52F1-4DC1-9FBC-8E6956B2D76B}
