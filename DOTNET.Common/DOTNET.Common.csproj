@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <AssemblyVersion>1.0.2.8</AssemblyVersion>
     <FileVersion>1.0.2.8</FileVersion>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
