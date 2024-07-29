@@ -4,7 +4,7 @@
     {
         Minutely,
         Hourly,
-        Daliy,
+        Daily,
         Weekly,
         WeeklySelective,
         Monthly,

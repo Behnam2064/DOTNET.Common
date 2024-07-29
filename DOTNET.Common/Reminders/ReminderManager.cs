@@ -248,7 +248,7 @@ namespace DOTNET.Common.Reminders
                                         }
 
                                         break;
-                                    case RepeatReminderType.Daliy:
+                                    case RepeatReminderType.Daily:
 
                                         if (LDateTime.GetDays(LastNotified) >= item.RepeatReminder.AmountTime)
                                         {
