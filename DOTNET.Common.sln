@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{F1D305D1-252
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{62C71B6D-4F4D-41EA-9630-6B5771CD734E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.DOTNET.Common", "Test.DOTNET.Common\Test.DOTNET.Common.csproj", "{A5C1E701-2D92-4FDE-ACC8-45EF5E8C15A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.DOTNET.Common", "Test.DOTNET.Common\Test.DOTNET.Common.csproj", "{A5C1E701-2D92-4FDE-ACC8-45EF5E8C15A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

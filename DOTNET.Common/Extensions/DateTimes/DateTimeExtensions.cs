@@ -8,9 +8,16 @@ namespace DOTNET.Common.Extensions.DateTimes
 {
     public static class DateTimeExtensions
     {
-        public static DateTime TrimMilliseconds(this DateTime dateTime)
+
+        public static DateTime TrimMicroseconds(this DateTime dateTime)
         {
             return dateTime.AddMicroseconds(-dateTime.Microsecond);
+        }
+
+
+        public static DateTime TrimMilliseconds(this DateTime dateTime)
+        {
+            return dateTime.AddMilliseconds(-dateTime.Millisecond);
         }
 
         public static DateTime TrimSeconds(this DateTime dateTime)
@@ -23,9 +30,15 @@ namespace DOTNET.Common.Extensions.DateTimes
             return dateTime.AddMinutes(-dateTime.Minute);
         }
 
+
+        public static DateTime TrimToSeconds(this DateTime dateTime)
+        {
+            return dateTime.TrimMicroseconds().TrimMilliseconds().TrimSeconds();
+        }
+
         public static DateTime TrimToMinutes(this DateTime dateTime)
         {
-            return dateTime.TrimMilliseconds().TrimMinutes();
+            return dateTime.TrimToSeconds().TrimMinutes();
         }
 
         public static bool IsToday(this DateTime dateTime)

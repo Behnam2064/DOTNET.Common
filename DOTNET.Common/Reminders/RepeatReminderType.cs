@@ -4,12 +4,12 @@
     {
         Minutely,
         Hourly,
-        Daliy,
+        Daily,
         Weekly,
         WeeklySelective,
         Monthly,
         MonthlySelective,
         Yearly,
-        YearlySelective,
+        //YearlySelective,
     }
 }
