@@ -56,5 +56,20 @@ namespace DOTNET.Common.Extensions.DateTimes
 
         public static double GetDays(this DateTime start, DateTime end) => end.Subtract(start).TotalDays;
 
+
+        /// <summary>
+        /// https://stackoverflow.com/questions/902789/how-to-get-the-start-and-end-times-of-a-day
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public static DateTime StartOfDay(this DateTime date) => date.Date;
+
+        /// <summary>
+        /// https://stackoverflow.com/questions/902789/how-to-get-the-start-and-end-times-of-a-day
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public static DateTime EndOfDay(this DateTime date) => date.Date.AddHours(12).AddTicks(-1);
+
     }
 }
