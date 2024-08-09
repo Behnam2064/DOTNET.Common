@@ -3,31 +3,32 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
+using System.Text;
 
 
 namespace DOTNET.Common.Encryptions
 {
-
     public class EncryptionUtil : ISecurityText
     {
-        //private static byte[] key = Encoding.UTF8.GetBytes("1234567890123456"); // 16 bytes key
-        //private static byte[] iv = Encoding.UTF8.GetBytes("1234567890123456"); // 16 bytes IV
-        public static EncryptionUtilSettings? settings;
+        //private static readonly byte[] key = Encoding.UTF8.GetBytes("1234567890123456"); // 16 bytes key
+        //private static readonly byte[] iv = Encoding.UTF8.GetBytes("1234567890123456"); // 16 bytes IV
+        public EncryptionUtilSettings? settings;
         public EncryptionUtil(EncryptionUtilSettings set)
         {
             settings = set;
         }
-        public EncryptionUtil()
-        {
-
-        }
+        public EncryptionUtil() { }
 
         public string EncryptText(string plainText)
         {
+            if (plainText == null)
+                throw new ArgumentNullException(nameof(plainText));
+
             using (Aes aesAlg = Aes.Create())
             {
-                aesAlg.Key = settings.KeyBytes;
-                aesAlg.IV = settings.IVBytes;
+                aesAlg.Key = settings.KeyBytes;// key;
+                aesAlg.IV = settings.IVBytes;// iv;
+                aesAlg.Padding = PaddingMode.PKCS7;
 
                 ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
 
@@ -35,25 +36,28 @@ namespace DOTNET.Common.Encryptions
                 {
                     using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
                     {
-                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt, Encoding.UTF8))
                         {
                             swEncrypt.Write(plainText);
                         }
-                        return Convert.ToBase64String(msEncrypt.ToArray());
                     }
+                    return Convert.ToBase64String(msEncrypt.ToArray());
                 }
             }
-
-
         }
 
-        public string DecryptText(string text)
+        public string DecryptText(string encryptedText)
         {
-            byte[] cipherText = Convert.FromBase64String(text);
+            if (encryptedText == null)
+                throw new ArgumentNullException(nameof(encryptedText));
+
+            byte[] cipherText = Convert.FromBase64String(encryptedText);
+
             using (Aes aesAlg = Aes.Create())
             {
-                aesAlg.Key = settings.KeyBytes;
-                aesAlg.IV = settings.IVBytes;
+                aesAlg.Key = settings.KeyBytes;// key;
+                aesAlg.IV = settings.IVBytes;// iv;
+                aesAlg.Padding = PaddingMode.PKCS7;
 
                 ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
@@ -61,7 +65,7 @@ namespace DOTNET.Common.Encryptions
                 {
                     using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
                     {
-                        using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                        using (StreamReader srDecrypt = new StreamReader(csDecrypt, Encoding.UTF8))
                         {
                             return srDecrypt.ReadToEnd();
                         }
@@ -70,6 +74,8 @@ namespace DOTNET.Common.Encryptions
             }
         }
     }
+
+
 
 }
 
