@@ -22,7 +22,10 @@ namespace DOTNET.Common.Encryptions
         public string EncryptText(string plainText)
         {
             if (plainText == null)
-                throw new ArgumentNullException(nameof(plainText));
+                ArgumentNullException.ThrowIfNull(plainText, nameof(plainText));
+            
+            if(settings == null)
+                ArgumentNullException.ThrowIfNull(settings, nameof(settings));  
 
             using (Aes aesAlg = Aes.Create())
             {
@@ -49,7 +52,10 @@ namespace DOTNET.Common.Encryptions
         public string DecryptText(string encryptedText)
         {
             if (encryptedText == null)
-                throw new ArgumentNullException(nameof(encryptedText));
+                ArgumentNullException.ThrowIfNull(encryptedText, nameof(encryptedText));
+
+            if (settings == null)
+                ArgumentNullException.ThrowIfNull(settings, nameof(settings));
 
             byte[] cipherText = Convert.FromBase64String(encryptedText);
 
