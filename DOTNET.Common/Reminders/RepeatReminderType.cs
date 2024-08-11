@@ -6,10 +6,10 @@
         Hourly,
         Daily,
         Weekly,
-        WeeklySelective,
         Monthly,
-        MonthlySelective,
         Yearly,
+        WeeklySelective,
+        MonthlySelective,
         //YearlySelective,
     }
 }
