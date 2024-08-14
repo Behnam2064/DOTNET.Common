@@ -39,5 +39,12 @@ namespace DOTNET.Common.Extensions.Strings
             return FileName;
 
         }
+
+        public static string ReplaceArabicWithPersian(this string str)
+            => str?.Replace("ي", "ی").Replace("ي", "ی").Replace("ك", "ک").Replace("ک", "ک").Replace("؟", "ی");
+
+        public static string ReplacePersianWithArabic(this string str)
+            => str?.Replace("ی", "ي").Replace("ی", "ي").Replace("ک", "ك").Replace("ک", "ک").Replace("ی", "؟");
+
     }
 }
