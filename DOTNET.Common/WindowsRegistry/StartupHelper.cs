@@ -21,6 +21,12 @@ namespace DOTNET.Common.WindowsRegistry
         /// </summary>
         public string AppAddress { get; private set; }
 
+        /// <summary>
+        /// Try find exe instance of dll
+        /// Default value is true
+        /// </summary>
+        public bool FindExe { get; set; }
+
         private const string REGISTRY_STARTUP_PATH = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
 
         #endregion
@@ -29,20 +35,20 @@ namespace DOTNET.Common.WindowsRegistry
 
         public StartupHelper()
         {
-
+            FindExe = true;
         }
 
-        public StartupHelper(Assembly assembly)
+        public StartupHelper(Assembly assembly) : this()
         {
             InitialAppInfo(assembly);
         }
 
-        public StartupHelper(Type assemblyType)
+        public StartupHelper(Type assemblyType) : this()
         {
             InitialAppInfo(assemblyType);
         }
 
-        public StartupHelper(string assemblyAddress)
+        public StartupHelper(string assemblyAddress) : this()
         {
             InitialAppInfo(assemblyAddress);
         }
@@ -121,6 +127,17 @@ namespace DOTNET.Common.WindowsRegistry
         {
             AppName = System.IO.Path.GetFileNameWithoutExtension(assembly.Location);
             AppAddress = assembly.Location;
+
+            if (FindExe && AppAddress.EndsWith(".dll"))
+            {
+                var TempAppAddress = AppAddress.Substring(0, AppAddress.LastIndexOf(".dll"));
+
+                if(System.IO.File.Exists(TempAppAddress + ".exe"))
+                {
+                    AppAddress = TempAppAddress + ".exe";
+                }
+
+            }
 
         }
 
