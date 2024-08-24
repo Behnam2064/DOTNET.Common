@@ -277,7 +277,10 @@ namespace DOTNET.Common.Reminders
                                             //if (item.LastNotified == null || !item.LastNotified.Value.IsToday())
                                             //{
                                             DateTime dateTimeConvertedToNow = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, item.StartDateTime.Hour, item.StartDateTime.Minute, item.StartDateTime.Second);
-                                            if (dateTimeConvertedToNow.TrimToSeconds() == DateTime.Now.TrimToSeconds() || dateTimeConvertedToNow.GetSeconds(DateTime.Now) <= TimeSpan.FromMilliseconds(this.Interval).TotalSeconds)
+                                            var ConvertedSecondTrimed = dateTimeConvertedToNow.TrimToSeconds();
+                                            var NowSecondTrimed = DateTime.Now.TrimToSeconds();
+
+                                            if (ConvertedSecondTrimed == NowSecondTrimed || dateTimeConvertedToNow.GetSeconds(DateTime.Now) <= TimeSpan.FromMilliseconds(this.Interval).TotalSeconds)
                                             {
                                                 OnReminder.Invoke(this, item);
                                                 item.LastNotified = DateTime.Now;
