@@ -8,12 +8,12 @@ namespace DOTNET.Common.Extensions.DateTimes
 {
     public static class DateTimeExtensions
     {
+        #region Trimers
 
         public static DateTime TrimMicroseconds(this DateTime dateTime)
         {
             return dateTime.AddMicroseconds(-dateTime.Microsecond);
         }
-
 
         public static DateTime TrimMilliseconds(this DateTime dateTime)
         {
@@ -30,7 +30,6 @@ namespace DOTNET.Common.Extensions.DateTimes
             return dateTime.AddMinutes(-dateTime.Minute);
         }
 
-
         public static DateTime TrimToSeconds(this DateTime dateTime)
         {
             return dateTime.TrimMicroseconds().TrimMilliseconds().TrimSeconds();
@@ -40,6 +39,8 @@ namespace DOTNET.Common.Extensions.DateTimes
         {
             return dateTime.TrimToSeconds().TrimMinutes();
         }
+
+        #endregion
 
         public static bool IsToday(this DateTime dateTime)
         {
@@ -70,6 +71,30 @@ namespace DOTNET.Common.Extensions.DateTimes
         /// <param name="date"></param>
         /// <returns></returns>
         public static DateTime EndOfDay(this DateTime date) => date.Date.AddHours(12).AddTicks(-1);
+
+        #region Max and Min
+
+        public static DateTime Max(this DateTime dateTime1, DateTime dateTime2)
+        {
+            return dateTime1 > dateTime2 ? dateTime1 : dateTime2;
+        }
+
+        public static DateTime Min(this DateTime dateTime1, DateTime dateTime2)
+        {
+            return dateTime1 < dateTime2 ? dateTime1 : dateTime2;
+        }
+
+        public static DateTime Max(params DateTime[] dates)
+        {
+            return dates.Max();
+        }
+
+        public static DateTime Min(params DateTime[] dates)
+        {
+            return dates.Max();
+        }
+
+        #endregion
 
     }
 }
