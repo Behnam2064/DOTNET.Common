@@ -96,5 +96,20 @@ namespace DOTNET.Common.Extensions.DateTimes
 
         #endregion
 
+        /// <summary>
+        /// https://stackoverflow.com/questions/6346119/compute-the-datetime-of-an-upcoming-weekday
+        /// </summary>
+        /// <param name="dayOfWeek"></param>
+        /// <returns></returns>
+        public static DateTime NextDayOfWeek(this DateTime today, DayOfWeek dayOfWeek)
+        {
+            //DateTime today = DateTime.Today;
+            // The (... + 7) % 7 ensures we end up with a value in the range [0, 6]
+            int daysUntilDayOfWeek = ((int)dayOfWeek - (int)today.DayOfWeek + 7) % 7;
+            DateTime nextDayOfWeek = today.AddDays(daysUntilDayOfWeek);
+
+            return nextDayOfWeek;
+        }
+
     }
 }
