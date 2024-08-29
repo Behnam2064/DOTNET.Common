@@ -146,7 +146,7 @@ namespace DOTNET.Common.Reminders
 
         private bool IsInTimerElapsed { get; set; }
 
-        private void TimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+        private void TimerElapsed(object? sender, System.Timers.ElapsedEventArgs? e)
         {
 
             if (IsInTimerElapsed)
