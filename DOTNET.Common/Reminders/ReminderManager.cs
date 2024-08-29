@@ -25,6 +25,9 @@ namespace DOTNET.Common.Reminders
         private bool _isRunning { get; set; }
         public bool IsRunning { get => _isRunning; }
 
+        private bool _InvokeAtConstructor { get; set; }
+        public bool InvokeAtConstructor { get => _InvokeAtConstructor; }
+
         /// <summary>
         /// Reminders
         /// </summary>
@@ -75,7 +78,14 @@ namespace DOTNET.Common.Reminders
 
 
                 if (args.StartAtConstructor)
+                {
                     Start();
+
+                    if (args.InvokeAtConstructor)
+                        Task.Run(() => TimerElapsed(Timer, null));
+
+            }
+
             }
             else
             {
