@@ -478,12 +478,20 @@ namespace DOTNET.Common.Reminders
                                                                                     }
                                                                                 }
                                         */
-                                        bool IsIncloudToday2 = item.RepeatReminder.Months.Any(x => x == CurrentMonth) && item.RepeatReminder.Days.Any(x => x == CurrentDay);
+                                        //bool IsIncloudToday2 = item.RepeatReminder.Months.Any(x => x == CurrentMonth) && item.RepeatReminder.Days.Any(x => x == CurrentDay);
+
+                                        List<(int day, int month)> daysList = new List<(int, int)>();
+                                        for (int y = 0; y < item.RepeatReminder.Days.Count; y++)// The Days and Month is same length and index
+                                            daysList.Add(new(item.RepeatReminder.Days[y], item.RepeatReminder.Months[y]));
+
+                                        bool IsIncloudToday2 = daysList.Any(x => x.month == CurrentMonth && x.day == CurrentDay);
+
 
                                         if (IsIncloudToday2)
                                         {
-                                            int day = item.RepeatReminder.Days.FirstOrDefault(x => x == CurrentDay);
-                                            int month = item.RepeatReminder.Months.FirstOrDefault(x => x == CurrentMonth);
+                                            var iff = daysList.First(x => x.month == CurrentMonth && x.day == CurrentDay);
+                                            int day = iff.day; // item.RepeatReminder.Days.FirstOrDefault(x => x == CurrentDay);
+                                            int month = iff.month; // item.RepeatReminder.Months.FirstOrDefault(x => x == CurrentMonth);
 
                                             DateTime dateTimeConvertedToNow = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, item.StartDateTime.Hour, item.StartDateTime.Minute, item.StartDateTime.Second).TrimToSeconds();
                                             DateTime DateTimeNowTrimToMinutes = DateTime.Now.TrimToSeconds();
