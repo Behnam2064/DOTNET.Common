@@ -20,6 +20,11 @@ namespace DOTNET.Common.Reminders
         public bool StartAtConstructor { get; set; }
 
         /// <summary>
+        /// It depends on the variable StartAtConstructor
+        /// </summary>
+        public bool InvokeAtConstructor { get; set; }
+
+        /// <summary>
         /// Do not invock OnRefreshReminders every time
         /// </summary>
         public bool IsConstReminderSource { get; set; }

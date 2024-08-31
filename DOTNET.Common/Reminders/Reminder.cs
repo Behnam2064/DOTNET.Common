@@ -14,6 +14,13 @@ namespace DOTNET.Common.Reminders
         //public long ReminderSecond { get; set; }
         public DateTime StartDateTime { get; set; }
         public DateTime? LastNotified { get; set; }
+
+        /// <summary>
+        /// Time left until reminder
+        /// </summary>
+        public TimeSpan? TimeLeft { get; set; }
+
+        public DateTime? NextNotify { get; set; }
         //public DateTime? NextNotify { get; internal set; }
         public RepeatReminder? RepeatReminder { get; set; }
 
