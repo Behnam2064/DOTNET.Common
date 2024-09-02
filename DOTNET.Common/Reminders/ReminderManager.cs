@@ -363,7 +363,7 @@ namespace DOTNET.Common.Reminders
                                             var diff = Min.GetSeconds(Max);
 
                                             if (
-                                            (item.LastNotified == null || DateTime.Now.Subtract(item.LastNotified.Value).TotalDays < 1) && //If a notification has not been displayed or more than a day has passed since the last notification was displayed
+                                            (item.LastNotified == null || DateTime.Now.Subtract(item.LastNotified.Value).TotalDays >= 1) && //If a notification has not been displayed or more than a day has passed since the last notification was displayed
                                              NowSecondTrimed == ConvertedSecondTrimed
                                             || diff <= TimeSpan.FromMilliseconds(this.Interval).TotalSeconds
                                             )
@@ -501,7 +501,7 @@ namespace DOTNET.Common.Reminders
                                             var diff = Min.GetSeconds(Max);
 
                                             if (
-                                            (item.LastNotified == null || DateTime.Now.Subtract(item.LastNotified.Value).TotalDays < 1) && //If a notification has not been displayed or more than a day has passed since the last notification was displayed
+                                            (item.LastNotified == null || DateTime.Now.Subtract(item.LastNotified.Value).TotalDays >= 1) && //If a notification has not been displayed or more than a day has passed since the last notification was displayed
                                             dateTimeConvertedToNow == DateTimeNowTrimToMinutes ||
                                             diff <= TimeSpan.FromMilliseconds(this.Interval).TotalSeconds)
                                             {
