@@ -13,6 +13,8 @@ namespace DOTNET.Common.WindowsAppsSettings
     {
         public readonly string Address;
 
+        private readonly Stream? stream;
+
         /// <summary>
         /// Default value is "user.config"
         /// </summary>
@@ -48,12 +50,21 @@ namespace DOTNET.Common.WindowsAppsSettings
             //Load();
         }
 
+        public WindowAppConfigReader(Stream stream) : this(string.Empty)
+        {
+            this.stream = stream;
+        }
+
         #region Load
 
         public void Load()
         {
             xdocument = new XmlDocument();
-            xdocument.Load(this.Address);
+            if (stream != null)
+                xdocument.Load(stream);
+            else
+                xdocument.Load(this.Address);
+
             ReadSettings();
         }
 
