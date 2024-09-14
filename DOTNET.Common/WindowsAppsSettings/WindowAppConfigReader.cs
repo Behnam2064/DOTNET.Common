@@ -45,12 +45,12 @@ namespace DOTNET.Common.WindowsAppsSettings
             Address = address;
             ConfgFileName = "user.config";
             this.settings = new List<KeyValuePair<string, KeyValuePair<string, object>>>();
-            Load();
+            //Load();
         }
 
         #region Load
 
-        private void Load()
+        public void Load()
         {
             xdocument = new XmlDocument();
             xdocument.Load(this.Address);
