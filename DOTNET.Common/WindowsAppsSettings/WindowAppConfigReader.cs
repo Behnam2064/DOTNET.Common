@@ -9,7 +9,7 @@ using System.Xml;
 
 namespace DOTNET.Common.WindowsAppsSettings
 {
-    public class WindowAppConfigReader
+    public class WindowAppConfigReader : IDisposable
     {
         public readonly string Address;
 
@@ -66,6 +66,14 @@ namespace DOTNET.Common.WindowsAppsSettings
                 xdocument.Load(this.Address);
 
             ReadSettings();
+        }
+
+        public Task LoadAsync()
+        {
+            return Task.Run(() =>
+            {
+                Load();
+            });
         }
 
         private void ReadSettings()
@@ -260,7 +268,11 @@ namespace DOTNET.Common.WindowsAppsSettings
             return null;
         }
 
-
+        public void Dispose()
+        {
+            stream?.Dispose();
+        }
+        
         #endregion
     }
 }

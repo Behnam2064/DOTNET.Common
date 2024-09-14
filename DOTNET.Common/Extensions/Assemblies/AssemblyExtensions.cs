@@ -19,7 +19,7 @@ namespace DOTNET.Common.Extensions.Assemblies
         /// <returns></returns>
         public static async Task<string> GetResourceStringAsync(this Assembly assembly, string name)
         {
-            using StreamReader reader = new(GetResourceStreamAsync(assembly,name));
+            using StreamReader reader = new(GetResourceStream(assembly,name));
             return await reader.ReadToEndAsync();
         }
 
@@ -30,7 +30,7 @@ namespace DOTNET.Common.Extensions.Assemblies
         /// <param name="assembly"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static Stream? GetResourceStreamAsync(this Assembly assembly, string name)
+        public static Stream? GetResourceStream(this Assembly assembly, string name)
         {
             // Determine path
             string resourcePath = name;
