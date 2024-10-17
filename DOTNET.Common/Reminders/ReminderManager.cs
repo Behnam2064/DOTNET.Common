@@ -533,29 +533,61 @@ namespace DOTNET.Common.Reminders
 
                                         if (item.RepeatReminder.Days.Any(x => x > CurrentDay))
                                         {
+                                            var d1 = item.RepeatReminder.Days.FirstOrDefault(x => x > CurrentDay);
                                             //Like Tomorrow
-                                            item.NextNotify = new DateTime
-                                            (DateTime.Now.Year,
-                                            DateTime.Now.Month, //Next day of current month : like today is 10 and Tomorrow is 11
-                                            item.RepeatReminder.Days.FirstOrDefault(x => x > CurrentDay),
-                                            item.StartDateTime.Hour,
-                                            item.StartDateTime.Minute,
-                                            item.StartDateTime.Second);
+                                            try
+                                            {
 
+                                                item.NextNotify = new DateTime
+                                                (DateTime.Now.Year,
+                                                DateTime.Now.Month, //Next day of current month : like today is 10 and Tomorrow is 11
+                                                d1,
+                                                item.StartDateTime.Hour,
+                                                item.StartDateTime.Minute,
+                                                item.StartDateTime.Second);
+
+                                            }
+                                            catch (System.ArgumentOutOfRangeException)
+                                            {
+
+                                                item.NextNotify = new DateTime
+                                                (DateTime.Now.Year,
+                                                DateTime.Now.Month, 
+                                                1, // 29,30,31 not exist
+                                                item.StartDateTime.Hour,
+                                                item.StartDateTime.Minute,
+                                                item.StartDateTime.Second);
+                                            }
                                             //(DayOfWeek)IntDayOfWeek;
                                             item.TimeLeft = item.NextNotify.Value.Subtract(DateTime.Now);
                                         }
                                         else if (item.RepeatReminder.Days.Any(x => x < CurrentDay))
                                         {
-                                            //For example, next week but one day before today
-                                            item.NextNotify = new DateTime
-                                            (DateTime.Now.Year,
-                                            ++CurrentMonth, // Next month: like today is 15 or next day of event is 14 which mean' should be next month
-                                            item.RepeatReminder.Days.FirstOrDefault(x => x < CurrentDay),
-                                            item.StartDateTime.Hour,
-                                            item.StartDateTime.Minute,
-                                            item.StartDateTime.Second);
+                                            try
+                                            {
 
+                                                //For example, next week but one day before today
+                                                item.NextNotify = new DateTime
+                                                (DateTime.Now.Year,
+                                                DateTime.Now.Month,
+                                                item.RepeatReminder.Days.FirstOrDefault(x => x < CurrentDay),
+                                                item.StartDateTime.Hour,
+                                                item.StartDateTime.Minute,
+                                                item.StartDateTime.Second);
+
+                                            }
+                                            catch (System.ArgumentOutOfRangeException)
+                                            {
+                                                //For example, next week but one day before today
+                                                item.NextNotify = new DateTime
+                                                (DateTime.Now.Year,
+                                                DateTime.Now.Month,
+                                                1, // 29,30,31 not exist
+                                                item.StartDateTime.Hour,
+                                                item.StartDateTime.Minute,
+                                                item.StartDateTime.Second);
+
+                                            }
                                             //(DayOfWeek)IntDayOfWeek;
                                             item.TimeLeft = item.NextNotify.Value.Subtract(DateTime.Now);
                                         }
