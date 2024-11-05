@@ -391,6 +391,22 @@ namespace DOTNET.Common.Reminders
                                                 }
                                             }
 
+                                            #region Debug
+
+                                            item.DebugString +=
+                                                            Environment.NewLine + $"IsOnReminderInvockedDebug =>{IsOnReminderInvockedDebug}"
+                                                            + Environment.NewLine + $"LastNotified is null =>{item.LastNotified == null}"
+                                                            + Environment.NewLine + $"DateTime.Now.Subtract(item.LastNotified.Value).TotalDays >= 1 =>{DateTime.Now.Subtract(item.LastNotified.Value).TotalDays >= 1}"
+                                                            + Environment.NewLine + $"NowSecondTrimed == ConvertedSecondTrimed =>{NowSecondTrimed == ConvertedSecondTrimed}"
+                                                            + Environment.NewLine + $"diff <= TimeSpan.FromMilliseconds(this.Interval).TotalSeconds =>{diff <= TimeSpan.FromMilliseconds(this.Interval).TotalSeconds}"
+                                                            + Environment.NewLine + $"NowSecondTrimed =>{NowSecondTrimed}"
+                                                            + Environment.NewLine + $"ConvertedSecondTrimed =>{ConvertedSecondTrimed}"
+                                                            + Environment.NewLine + $"diff (TotalSeconds) =>{diff}"
+                                                            + Environment.NewLine + $"DateTime.Now.Subtract(item.LastNotified.Value).TotalDays =>{DateTime.Now.Subtract(item.LastNotified.Value).TotalDays}"
+                                                            + Environment.NewLine + $"TimeSpan.FromMilliseconds(this.Interval).TotalSeconds =>{TimeSpan.FromMilliseconds(this.Interval).TotalSeconds}"
+                                                            .TrimStart();
+
+                                            #endregion
                                         }
 
                                         #region Calculate next notify and time left
