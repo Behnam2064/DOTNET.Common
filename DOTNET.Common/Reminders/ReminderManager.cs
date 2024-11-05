@@ -362,10 +362,29 @@ namespace DOTNET.Common.Reminders
                                             var Min = ConvertedToNow.Min(DateTime.Now);
                                             var diff = Min.GetSeconds(Max);
 
+                                            #region Recently displayed
+                                            //Has an event recently been displayed? (Less than or equal to one minute ago)
+                                            //If there is no code below, each event will be displayed with two characters
+                                            bool HasRecenctlyDisplayed = false; //If the event was displayed less than a minute ago, do not display it again
+                                            if (item.LastNotified == null)
+                                            {
+                                                //It has never been displayed
+                                                HasRecenctlyDisplayed = false; 
+                                            }
+                                            else
+                                            {
+                                                //Has the current event happened in the last minute?
+                                                HasRecenctlyDisplayed = DateTime.Now.Subtract(item.LastNotified.Value).TotalMinutes <= 1;
+                                            }
+
+                                            #endregion
+
                                             if (
-                                            (item.LastNotified == null || DateTime.Now.Subtract(item.LastNotified.Value).TotalDays >= 1) && //If a notification has not been displayed or more than a day has passed since the last notification was displayed
+                                            (item.LastNotified == null || 
+                                            DateTime.Now.Subtract(item.LastNotified.Value).TotalDays >= 1) //If a notification has not been displayed or more than a day has passed since the last notification was displayed
+                                            && 
                                              NowSecondTrimed == ConvertedSecondTrimed
-                                            || diff <= TimeSpan.FromMilliseconds(this.Interval).TotalSeconds
+                                            || (!HasRecenctlyDisplayed && diff <= TimeSpan.FromMilliseconds(this.Interval).TotalSeconds)
                                             )
                                             {
                                                 OnReminder.Invoke(this, item);
@@ -516,10 +535,31 @@ namespace DOTNET.Common.Reminders
                                             var Min = dateTimeConvertedToNow.Min(DateTime.Now);
                                             var diff = Min.GetSeconds(Max);
 
+
+
+                                            #region Recently displayed
+                                            //Has an event recently been displayed? (Less than or equal to one minute ago)
+                                            //If there is no code below, each event will be displayed with two characters
+                                            bool HasRecenctlyDisplayed = false; //If the event was displayed less than a minute ago, do not display it again
+                                            if (item.LastNotified == null)
+                                            {
+                                                //It has never been displayed
+                                                HasRecenctlyDisplayed = false;
+                                            }
+                                            else
+                                            {
+                                                //Has the current event happened in the last minute?
+                                                HasRecenctlyDisplayed = DateTime.Now.Subtract(item.LastNotified.Value).TotalMinutes <= 1;
+                                            }
+
+                                            #endregion
+
                                             if (
-                                            (item.LastNotified == null || DateTime.Now.Subtract(item.LastNotified.Value).TotalDays >= 1) && //If a notification has not been displayed or more than a day has passed since the last notification was displayed
+                                            (item.LastNotified == null || 
+                                            DateTime.Now.Subtract(item.LastNotified.Value).TotalDays >= 1) //If a notification has not been displayed or more than a day has passed since the last notification was displayed
+                                            && 
                                             dateTimeConvertedToNow == DateTimeNowTrimToMinutes ||
-                                            diff <= TimeSpan.FromMilliseconds(this.Interval).TotalSeconds)
+                                            (!HasRecenctlyDisplayed && diff <= TimeSpan.FromMilliseconds(this.Interval).TotalSeconds))
                                             {
                                                 OnReminder.Invoke(this, item);
                                                 item.LastNotified = DateTime.Now;
