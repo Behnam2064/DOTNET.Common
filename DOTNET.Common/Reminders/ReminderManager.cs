@@ -212,6 +212,7 @@ namespace DOTNET.Common.Reminders
 
                         foreach (var item in Reminders)
                         {
+                            item.DebugString = null;
                             #region Time check
 
                             //  2/2/2024 > 1/1/2024
@@ -361,6 +362,7 @@ namespace DOTNET.Common.Reminders
                                             var Max = ConvertedToNow.Max(DateTime.Now);
                                             var Min = ConvertedToNow.Min(DateTime.Now);
                                             var diff = Min.GetSeconds(Max);
+                                            bool IsOnReminderInvockedDebug = false;
 
                                             #region Recently displayed
                                             //Has an event recently been displayed? (Less than or equal to one minute ago)
@@ -387,6 +389,7 @@ namespace DOTNET.Common.Reminders
                                             || (!HasRecenctlyDisplayed && diff <= TimeSpan.FromMilliseconds(this.Interval).TotalSeconds)
                                             )
                                             {
+                                                IsOnReminderInvockedDebug = true;
                                                 OnReminder.Invoke(this, item);
                                                 item.LastNotified = DateTime.Now;
                                                 //Do not use break to find next notify date time like tomorrow
@@ -608,7 +611,7 @@ namespace DOTNET.Common.Reminders
 
                                                 item.NextNotify = new DateTime
                                                 (DateTime.Now.Year,
-                                                DateTime.Now.Month, 
+                                                DateTime.Now.Month,
                                                 1, // 29,30,31 not exist
                                                 item.StartDateTime.Hour,
                                                 item.StartDateTime.Minute,
