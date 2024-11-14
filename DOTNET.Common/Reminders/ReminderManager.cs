@@ -698,12 +698,12 @@ namespace DOTNET.Common.Reminders
 
         private void OnCheckBeforeReminder(Reminder reminder)
         {
-            if(reminder.RemindBefore != null && reminder.TimeLeft != null)
+            if(reminder.RemindMeBefore != null && reminder.TimeLeft != null)
             {
-                if (reminder.LastRemindBeforeNotified != null && DateTime.Now.Subtract(reminder.LastRemindBeforeNotified.Value).Seconds >= 60)
+                if (reminder.LastRemindMeBeforeNotified != null && DateTime.Now.Subtract(reminder.LastRemindMeBeforeNotified.Value).Seconds >= 60)
                     return;
                 // 20 >= 10
-                if(reminder.RemindBefore >= reminder.TimeLeft)
+                if(reminder.RemindMeBefore >= reminder.TimeLeft)
                 {
                     OnBeforeReminder?.Invoke(this, reminder);
                 }

@@ -27,8 +27,8 @@ namespace DOTNET.Common.Reminders
         /// <summary>
         /// Reminder before the main event
         /// </summary>
-        public TimeSpan? RemindBefore { get; set; }
-        public DateTime? LastRemindBeforeNotified { get; set; }
+        public TimeSpan? RemindMeBefore { get; set; }
+        public DateTime? LastRemindMeBeforeNotified { get; set; }
 
         public string? DebugString { get; set; }
 
