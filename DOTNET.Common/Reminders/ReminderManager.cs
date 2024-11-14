@@ -50,6 +50,8 @@ namespace DOTNET.Common.Reminders
 
         public EventHandler<Reminder> OnReminder { get; set; }
 
+        public EventHandler<Reminder> OnBeforeReminder { get; set; }
+
         #endregion
 
         public ReminderManager(ReminderManagerArgs args)
@@ -221,6 +223,7 @@ namespace DOTNET.Common.Reminders
                             {
                                 item.TimeLeft = item.StartDateTime.Subtract(DateTime.Now);
                                 item.NextNotify = DateTime.Now.AddTicks(item.TimeLeft.Value.Ticks);
+                                OnCheckBeforeReminder(item);
                                 continue;
                             }
 
@@ -259,6 +262,7 @@ namespace DOTNET.Common.Reminders
                                     }
                                 }
 
+                                OnCheckBeforeReminder(item);
                             }
                             else
                             {
@@ -675,6 +679,8 @@ namespace DOTNET.Common.Reminders
                                     default:
                                         break;
                                 }
+
+                                OnCheckBeforeReminder(item); // afte calculate next notify 
                             }
                         }
                     };
@@ -686,6 +692,20 @@ namespace DOTNET.Common.Reminders
                     bw.RunWorkerAsync();
 
 
+                }
+            }
+        }
+
+        private void OnCheckBeforeReminder(Reminder reminder)
+        {
+            if(reminder.RemindBefore != null && reminder.TimeLeft != null)
+            {
+                if (reminder.LastRemindBeforeNotified != null && DateTime.Now.Subtract(reminder.LastRemindBeforeNotified.Value).Seconds >= 60)
+                    return;
+                // 20 >= 10
+                if(reminder.RemindBefore >= reminder.TimeLeft)
+                {
+                    OnBeforeReminder?.Invoke(this, reminder);
                 }
             }
         }
