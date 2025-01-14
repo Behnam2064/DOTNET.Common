@@ -30,5 +30,8 @@ namespace DOTNET.Common.Reminders
         public bool IsConstReminderSource { get; set; }
 
         public EventHandler<Reminder>? OnReminder { get; set; }
+
+        public EventHandler<Reminder>? OnBeforeReminder { get; set; }
+
     }
 }

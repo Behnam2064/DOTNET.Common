@@ -75,6 +75,9 @@ namespace DOTNET.Common.Reminders
                 if (args.OnReminder != null)
                     this.OnReminder += args.OnReminder;
 
+                if (args.OnBeforeReminder != null)
+                    this.OnBeforeReminder += args.OnBeforeReminder;
+
                 this.IsConstReminderSource = args.IsConstReminderSource;
 
 
@@ -698,12 +701,12 @@ namespace DOTNET.Common.Reminders
 
         private void OnCheckBeforeReminder(Reminder reminder)
         {
-            if(reminder.RemindMeBefore != null && reminder.TimeLeft != null)
+            if (reminder.RemindMeBefore != null && reminder.TimeLeft != null)
             {
                 if (reminder.LastRemindMeBeforeNotified != null && DateTime.Now.Subtract(reminder.LastRemindMeBeforeNotified.Value).Seconds >= 60)
                     return;
                 // 20 >= 10
-                if(reminder.RemindMeBefore >= reminder.TimeLeft)
+                if (reminder.RemindMeBefore >= reminder.TimeLeft)
                 {
                     OnBeforeReminder?.Invoke(this, reminder);
                 }
