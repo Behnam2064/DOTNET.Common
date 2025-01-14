@@ -378,7 +378,7 @@ namespace DOTNET.Common.Reminders
                                             if (item.LastNotified == null)
                                             {
                                                 //It has never been displayed
-                                                HasRecenctlyDisplayed = false; 
+                                                HasRecenctlyDisplayed = false;
                                             }
                                             else
                                             {
@@ -389,9 +389,9 @@ namespace DOTNET.Common.Reminders
                                             #endregion
 
                                             if (
-                                            (item.LastNotified == null || 
+                                            (item.LastNotified == null ||
                                             DateTime.Now.Subtract(item.LastNotified.Value).TotalDays >= 1) //If a notification has not been displayed or more than a day has passed since the last notification was displayed
-                                            && 
+                                            &&
                                              NowSecondTrimed == ConvertedSecondTrimed
                                             || (!HasRecenctlyDisplayed && diff <= TimeSpan.FromMilliseconds(this.Interval).TotalSeconds)
                                             )
@@ -565,9 +565,9 @@ namespace DOTNET.Common.Reminders
                                             #endregion
 
                                             if (
-                                            (item.LastNotified == null || 
+                                            (item.LastNotified == null ||
                                             DateTime.Now.Subtract(item.LastNotified.Value).TotalDays >= 1) //If a notification has not been displayed or more than a day has passed since the last notification was displayed
-                                            && 
+                                            &&
                                             dateTimeConvertedToNow == DateTimeNowTrimToMinutes ||
                                             (!HasRecenctlyDisplayed && diff <= TimeSpan.FromMilliseconds(this.Interval).TotalSeconds))
                                             {
@@ -631,12 +631,30 @@ namespace DOTNET.Common.Reminders
                                         {
                                             try
                                             {
+                                                int NextDay = 0;
+                                                int NextMonth = 0;
+                                                if (item.RepeatReminder.Months.Any(x => x > DateTime.Now.Month))
+                                                {
+                                                    NextMonth = item.RepeatReminder.Months.FirstOrDefault(x => x > DateTime.Now.Month);
+                                                    if (item.RepeatReminder.Days.Any(x => x > CurrentDay))
+                                                        NextDay = item.RepeatReminder.Days.FirstOrDefault(x => x > CurrentDay);
+                                                    else
+                                                        NextDay = item.RepeatReminder.Days.FirstOrDefault(x => x < CurrentDay);
+
+                                                }
+                                                else
+                                                {
+                                                    NextMonth = DateTime.Now.Month;
+                                                    NextDay = item.RepeatReminder.Days.FirstOrDefault(x => x < CurrentDay);
+                                                }
+
+
 
                                                 //For example, next week but one day before today
                                                 item.NextNotify = new DateTime
                                                 (DateTime.Now.Year,
-                                                DateTime.Now.Month,
-                                                item.RepeatReminder.Days.FirstOrDefault(x => x < CurrentDay),
+                                                NextMonth,//DateTime.Now.Month,
+                                                NextDay,//item.RepeatReminder.Days.FirstOrDefault(x => x < CurrentDay),
                                                 item.StartDateTime.Hour,
                                                 item.StartDateTime.Minute,
                                                 item.StartDateTime.Second);
@@ -703,7 +721,7 @@ namespace DOTNET.Common.Reminders
         {
             if (reminder.RemindMeBefore != null && reminder.TimeLeft != null)
             {
-                if (reminder.LastRemindMeBeforeNotified != null && DateTime.Now.Subtract(reminder.LastRemindMeBeforeNotified.Value).Seconds >= 60)
+                if (reminder.LastRemindMeBeforeNotified != null && DateTime.Now.Subtract(reminder.LastRemindMeBeforeNotified.Value).TotalSeconds >= 20)
                     return;
                 // 20 >= 10
                 if (reminder.RemindMeBefore >= reminder.TimeLeft)
