@@ -12,5 +12,7 @@ namespace DOTNET.Common.Interfaces
         public EncryptionUtilSettings? Settings { get; set; }
         public string EncryptText(string textToEncrypt);
         public string DecryptText(string textToDecrypt);
+        public string EncryptText(string plainText, EncryptionUtilSettings? settings);
+        public string DecryptText(string encryptedText, EncryptionUtilSettings? settings);
     }
 }
