@@ -12,10 +12,10 @@ namespace DOTNET.Common.Encryptions
     {
         //private static readonly byte[] key = Encoding.UTF8.GetBytes("1234567890123456"); // 16 bytes key
         //private static readonly byte[] iv = Encoding.UTF8.GetBytes("1234567890123456"); // 16 bytes IV
-        public EncryptionUtilSettings? settings;
+        public EncryptionUtilSettings? Settings { get; set; }
         public EncryptionUtil(EncryptionUtilSettings set)
         {
-            settings = set;
+            Settings = set;
         }
         public EncryptionUtil() { }
 
@@ -24,13 +24,13 @@ namespace DOTNET.Common.Encryptions
             if (plainText == null)
                 ArgumentNullException.ThrowIfNull(plainText, nameof(plainText));
             
-            if(settings == null)
-                ArgumentNullException.ThrowIfNull(settings, nameof(settings));  
+            if(Settings == null)
+                ArgumentNullException.ThrowIfNull(Settings, nameof(Settings));  
 
             using (Aes aesAlg = Aes.Create())
             {
-                aesAlg.Key = settings.KeyBytes;// key;
-                aesAlg.IV = settings.IVBytes;// iv;
+                aesAlg.Key = Settings.KeyBytes;// key;
+                aesAlg.IV = Settings.IVBytes;// iv;
                 aesAlg.Padding = PaddingMode.PKCS7;
 
                 ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
@@ -54,15 +54,15 @@ namespace DOTNET.Common.Encryptions
             if (encryptedText == null)
                 ArgumentNullException.ThrowIfNull(encryptedText, nameof(encryptedText));
 
-            if (settings == null)
-                ArgumentNullException.ThrowIfNull(settings, nameof(settings));
+            if (Settings == null)
+                ArgumentNullException.ThrowIfNull(Settings, nameof(Settings));
 
             byte[] cipherText = Convert.FromBase64String(encryptedText);
 
             using (Aes aesAlg = Aes.Create())
             {
-                aesAlg.Key = settings.KeyBytes;// key;
-                aesAlg.IV = settings.IVBytes;// iv;
+                aesAlg.Key = Settings.KeyBytes;// key;
+                aesAlg.IV = Settings.IVBytes;// iv;
                 aesAlg.Padding = PaddingMode.PKCS7;
 
                 ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
