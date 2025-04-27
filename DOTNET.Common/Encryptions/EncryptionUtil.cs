@@ -8,7 +8,7 @@ using System.Text;
 
 namespace DOTNET.Common.Encryptions
 {
-    public class EncryptionUtil : ISecurityText
+    public class EncryptionUtil : ISecurityText , IEncryptionUtil
     {
         //private static readonly byte[] key = Encoding.UTF8.GetBytes("1234567890123456"); // 16 bytes key
         //private static readonly byte[] iv = Encoding.UTF8.GetBytes("1234567890123456"); // 16 bytes IV
