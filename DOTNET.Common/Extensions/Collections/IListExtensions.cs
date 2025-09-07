@@ -38,14 +38,16 @@ namespace DOTNET.Common.Extensions.Collections
             return "?" + string.Join("&", queryParams);
         }
 
-        public static void AddHttpHeaders(this IList<string> headers, HttpRequestHeaders httpHeader)
+        public static void AddHttpHeaders(this IList<string> headers, HttpRequestHeaders httpHeader, bool encode = true)
         {
-            if (headers == null || headers.Count() < 2)
+            if (headers == null || headers.Count < 2)
                 return;
 
-            for (int i = 0; i < headers.Count() - 1; i += 2)
+            for (int i = 0; i < headers.Count - 1; i += 2)
             {
-                httpHeader.Add(Uri.EscapeDataString(headers[i]), Uri.EscapeDataString(headers[i + 1]));
+                var key = encode ? Uri.EscapeDataString(headers[i]) : headers[i];
+                var value = encode ? Uri.EscapeDataString(headers[i + 1]) : headers[i + 1];
+                httpHeader.Add(key, value);
             }
         }
     }
